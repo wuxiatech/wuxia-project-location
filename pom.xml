@@ -15,7 +15,7 @@
     </properties>
     <description>Project Location</description>
     <packaging>jar</packaging>
-
+    <url>https://github.com/wuxiatech/wuxia-project-location.git</url>
     <dependencies>
         <dependency>
             <groupId>cn.wuxia.project</groupId>
