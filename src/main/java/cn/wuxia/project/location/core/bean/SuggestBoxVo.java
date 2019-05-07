@@ -2,7 +2,7 @@
  * Created on :20 Mar, 2014 Author :songlin Change History Version Date Author
  * Reason <Ver.No> <date> <who modify> <reason>
  */
-package cn.wuxia.project.ad.core.bean;
+package cn.wuxia.project.location.core.bean;
 
 import java.io.Serializable;
 
@@ -31,7 +31,7 @@ public class SuggestBoxVo implements Serializable {
 
     private String simplePinyin;
 
-    private Long parentId;
+    private String parentId;
 
     public SuggestBoxVo() {
     }
@@ -93,11 +93,11 @@ public class SuggestBoxVo implements Serializable {
         this.simplePinyin = simplePinyin;
     }
 
-    public Long getParentId() {
+    public String getParentId() {
         return parentId;
     }
 
-    public void setParentId(Long parentId) {
+    public void setParentId(String parentId) {
         this.parentId = parentId;
     }
 

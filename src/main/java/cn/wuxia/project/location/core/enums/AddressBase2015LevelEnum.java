@@ -1,6 +1,6 @@
 /*
  */
-package cn.wuxia.project.ad.core.enums;
+package cn.wuxia.project.location.core.enums;
 
 /**
  * level枚举

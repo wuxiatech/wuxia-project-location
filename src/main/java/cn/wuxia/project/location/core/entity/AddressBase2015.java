@@ -1,19 +1,16 @@
-package cn.wuxia.project.ad.core.entity;
+package cn.wuxia.project.location.core.entity;
 
-import java.util.List;
+import cn.wuxia.project.common.model.CommonEntity;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import cn.wuxia.project.common.model.ModifyInfoEntity;
+import java.util.List;
 
 /**
  * The persistent class for the dic_address database table.
@@ -21,9 +18,9 @@ import cn.wuxia.project.common.model.ModifyInfoEntity;
 @Entity
 @Table(name = "dic_address_base")
 @JsonAutoDetect
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "parentAddressBase" })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "parentAddressBase"})
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class AddressBase2015 extends ModifyInfoEntity {
+public class AddressBase2015 extends CommonEntity {
     private static final long serialVersionUID = 1L;
 
     private String name;
