@@ -51,8 +51,7 @@ public class AddressBase2015ServiceImpl extends CommonServiceImpl<AddressBase201
      * @return
      * @author songlin
      */
-    @Override
-    public Map<String, AddressBase2015> getProvinceMap() {
+    private Map<String, AddressBase2015> getProvinceMap() {
         String key = className + ".getProvinceMap";
         Object v = CacheSupport.get(addressCache, key);
         if (v == null) {
@@ -68,19 +67,13 @@ public class AddressBase2015ServiceImpl extends CommonServiceImpl<AddressBase201
 
     }
 
-    @Override
-    @Cacheable(key = CacheConstants.CACHED_KEY_DEFAULT, value = CacheConstants.CACHED_VALUE_1_DAY)
-    public Map<String, String> getProvinceNameMap() {
-        List<AddressBase2015> list = findAllProvince();
-        Map<String, String> map = Maps.newHashMap();
-        for (AddressBase2015 ab : list) {
-            map.put(ab.getId(), ab.getName());
-        }
-        return map;
-    }
 
-    @Override
-    public Map<String, AddressBase2015> getCityMap() {
+    /**
+     * key 为cityName
+     *
+     * @return
+     */
+    private Map<String, AddressBase2015> getCityMap() {
         String key = className + ".getCityMap";
         Object v = CacheSupport.get(addressCache, key);
         if (v == null) {
@@ -95,45 +88,29 @@ public class AddressBase2015ServiceImpl extends CommonServiceImpl<AddressBase201
         return (Map<String, AddressBase2015>) v;
     }
 
-    @Override
-    @Cacheable(key = CacheConstants.CACHED_KEY_DEFAULT, value = CacheConstants.CACHED_VALUE_1_DAY)
-    public Map<String, String> getCityNameMap() {
-        List<AddressBase2015> citys = addressBase2015Dao.findAllCity();
-        Map<String, String> map = Maps.newHashMap();
-        for (AddressBase2015 ab : citys) {
-            map.put(ab.getId(), ab.getName());
-        }
-        return map;
-    }
 
     @Override
     @Cacheable(key = CacheConstants.CACHED_KEY_DEFAULT + "+#name", value = CacheConstants.CACHED_VALUE_1_DAY)
     public List<AddressBase2015> findByName(String name) {
-        return addressBase2015Dao.findByName(name);
+        List list = addressBase2015Dao.findByName(name);
+        /**
+         * 如果没有数据则模糊查找一次
+         */
+        if (ListUtil.isNotEmpty(list)) {
+            return list;
+        }
+        return findLikeName(name);
     }
 
-    @Override
-    @Cacheable(key = CacheConstants.CACHED_KEY_DEFAULT + "+#mergerName", value = CacheConstants.CACHED_VALUE_1_DAY)
-    public List<AddressBase2015> findLikeFullName(String mergerName) {
-        if (!StringUtil.startsWith(mergerName, "%")) {
-            mergerName = "%" + mergerName;
+    @Cacheable(key = CacheConstants.CACHED_KEY_DEFAULT + "+#name", value = CacheConstants.CACHED_VALUE_1_DAY)
+    public List<AddressBase2015> findLikeName(String name) {
+        if (!StringUtil.startsWith(name, "%")) {
+            name = "%" + name;
         }
-        if (!StringUtil.endsWith(mergerName, "%")) {
-            mergerName = mergerName + "%";
+        if (!StringUtil.endsWith(name, "%")) {
+            name = name + "%";
         }
-        return addressBase2015Dao.findLikeMergerName(mergerName);
-    }
-
-    @Override
-    @Cacheable(key = CacheConstants.CACHED_KEY_DEFAULT + "+#shortName", value = CacheConstants.CACHED_VALUE_1_DAY)
-    public List<AddressBase2015> findLikeShortName(String shortName) {
-        if (!StringUtil.startsWith(shortName, "%")) {
-            shortName = "%" + shortName;
-        }
-        if (!StringUtil.endsWith(shortName, "%")) {
-            shortName = shortName + "%";
-        }
-        return addressBase2015Dao.find(Restrictions.like("shortName", shortName));
+        return addressBase2015Dao.find(Restrictions.like("name", name));
     }
 
     @Override
@@ -161,8 +138,12 @@ public class AddressBase2015ServiceImpl extends CommonServiceImpl<AddressBase201
         return (List<AddressBase2015>) v;
     }
 
-    @Override
-    public Map<String, AddressBase2015> getAreaMap() {
+    /**
+     * key为countryName
+     *
+     * @return
+     */
+    private Map<String, AddressBase2015> getAreaMap() {
         String key = className + ".getAreaMap";
         Object v = CacheSupport.get(addressCache, key);
         if (v == null) {
@@ -177,7 +158,6 @@ public class AddressBase2015ServiceImpl extends CommonServiceImpl<AddressBase201
         return (Map<String, AddressBase2015>) v;
     }
 
-    @Override
     public List<AddressBase2015> getAllArea() {
 
         String key = className + ".getAllArea";
@@ -191,8 +171,12 @@ public class AddressBase2015ServiceImpl extends CommonServiceImpl<AddressBase201
         return (List<AddressBase2015>) v;
     }
 
-    @Override
-    public Map<String, AddressBase2015> getNationMap() {
+    /**
+     * key 为nationName
+     *
+     * @return
+     */
+    private Map<String, AddressBase2015> getNationMap() {
         String key = className + ".getNationMap";
         Object v = CacheSupport.get(addressCache, key);
         if (v == null) {
@@ -306,19 +290,36 @@ public class AddressBase2015ServiceImpl extends CommonServiceImpl<AddressBase201
 
 
     @Override
-    public AddressBase2015 findByNameAndLevel(String name, AddressBase2015LevelEnum addressLevel) {
+    public List<AddressBase2015> findByNameAndLevel(String name, AddressBase2015LevelEnum addressLevel) {
+        AddressBase2015 addressBase2015 = null;
         switch (addressLevel) {
             case NATION:
-                return getNationMap().get(name);
+                addressBase2015 = getNationMap().get(name);
+                break;
             case PROVINCE:
-                return getProvinceMap().get(name);
+                addressBase2015 = getProvinceMap().get(name);
+                break;
             case CITY:
-                return getCityMap().get(name);
+                addressBase2015 = getCityMap().get(name);
+                break;
             case COUNTRY_DISTRICT:
-                return getAreaMap().get(name);
+                addressBase2015 = getAreaMap().get(name);
+                break;
             default:
                 break;
         }
-        return null;
+        return Lists.newArrayList(addressBase2015);
+    }
+
+    @Override
+    public AddressBase2015 findByCountryNameAndCityName(String countryName, String cityName) {
+        List<AddressBase2015> addressBase2015s = addressBase2015Dao.findByChildrenNameAndParentName(countryName, cityName);
+        return ListUtil.isNotEmpty(addressBase2015s) ? addressBase2015s.get(0) : null;
+    }
+
+    @Override
+    public AddressBase2015 findByCityNameAndProvinceName(String cityName, String provinceName) {
+        List<AddressBase2015> addressBase2015s = addressBase2015Dao.findByChildrenNameAndParentName(cityName, provinceName);
+        return ListUtil.isNotEmpty(addressBase2015s) ? addressBase2015s.get(0) : null;
     }
 }

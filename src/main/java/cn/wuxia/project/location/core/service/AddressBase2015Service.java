@@ -4,28 +4,19 @@
  */
 package cn.wuxia.project.location.core.service;
 
+import cn.wuxia.project.common.service.CommonService;
 import cn.wuxia.project.location.core.bean.SuggestBoxVo;
 import cn.wuxia.project.location.core.entity.AddressBase2015;
 import cn.wuxia.project.location.core.enums.AddressBase2015LevelEnum;
-import cn.wuxia.project.common.service.CommonService;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface AddressBase2015Service extends CommonService<AddressBase2015, String> {
 
-    @Deprecated
-    public Map<String, AddressBase2015> getProvinceMap();
 
-    @Deprecated
-    public Map<String, String> getProvinceNameMap();
 
-    @Deprecated
-    public Map<String, AddressBase2015> getCityMap();
 
-    @Deprecated
-    public Map<String, String> getCityNameMap();
 
     /**
      * 根据名字模糊查找
@@ -34,21 +25,6 @@ public interface AddressBase2015Service extends CommonService<AddressBase2015, S
      */
     public List<AddressBase2015> findByName(String name);
 
-    /**
-     * 根据全称模糊查找
-     * @param mergerName
-     * @return
-     */
-    @Deprecated
-    public List<AddressBase2015> findLikeFullName(String mergerName);
-
-    /**
-     * 根据短名姓查找
-     *
-     * @author guwen
-     */
-    @Deprecated
-    public List<AddressBase2015> findLikeShortName(String mergerName);
 
     /**
      * 查找所有省份
@@ -70,26 +46,7 @@ public interface AddressBase2015Service extends CommonService<AddressBase2015, S
     @Deprecated
     public List<AddressBase2015> getAllCity();
 
-    /**
-     * 查找区域，key为所在区域
-     * @return
-     */
-    @Deprecated
-    public Map<String, AddressBase2015> getAreaMap();
 
-    /**
-     * 查找所有区域
-     * @return
-     */
-    @Deprecated
-    public List<AddressBase2015> getAllArea();
-
-    /**
-     * 国家
-     * @return
-     */
-    @Deprecated
-    public Map<String, AddressBase2015> getNationMap();
 
     /**
      * 查找所有国家
@@ -121,11 +78,27 @@ public interface AddressBase2015Service extends CommonService<AddressBase2015, S
     public AddressBase2015 findByLngAndLat(float lng, float lat);
 
     /**
-     *
+     * 更具级别模糊查找
      * @param name
      * @param addressLevel
      * @return
      */
-    @Deprecated
-    public AddressBase2015 findByNameAndLevel(String name, AddressBase2015LevelEnum addressLevel);
+    public List<AddressBase2015> findByNameAndLevel(String name, AddressBase2015LevelEnum addressLevel);
+
+    /**
+     * 更具市区查找区，如：白云区， 广州市
+     * @param countryName
+     * @param cityName
+     * @return
+     */
+    public AddressBase2015 findByCountryNameAndCityName(String countryName, String cityName);
+
+
+    /**
+     * 更具市区查找区，如： 广州市, 广东省
+     * @param cityName
+     * @param provinceName
+     * @return
+     */
+    public AddressBase2015 findByCityNameAndProvinceName(String cityName, String provinceName);
 }

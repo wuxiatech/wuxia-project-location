@@ -18,6 +18,7 @@ public class AddressBase2015Dao extends BaseCommonDao<AddressBase2015, String> {
 
     /**
      * 根据名字精确查找
+     *
      * @param name
      * @return
      */
@@ -27,6 +28,7 @@ public class AddressBase2015Dao extends BaseCommonDao<AddressBase2015, String> {
 
     /**
      * 根据名字模糊查找
+     *
      * @param mergerName
      * @return
      */
@@ -85,6 +87,17 @@ public class AddressBase2015Dao extends BaseCommonDao<AddressBase2015, String> {
      */
     public List<AddressBase2015> findByParentId(String parentId) {
         return findBy("parentId", parentId);
+    }
+
+    /**
+     * 根据父子名称查找子记录，如：白云区，广州市； 广州市，广东省
+     *
+     * @param childrenName
+     * @param parentName
+     * @return
+     */
+    public List<AddressBase2015> findByChildrenNameAndParentName(String childrenName, String parentName) {
+        return find("select c from AddressBase2015 c,AddressBase2015 p where c.parentId = p.id and c.name = ? and p.name = ?", childrenName, parentName);
     }
 
 
