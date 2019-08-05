@@ -7,8 +7,6 @@ import cn.wuxia.project.common.dao.CommonDao;
 import cn.wuxia.project.common.service.impl.CommonServiceImpl;
 import cn.wuxia.project.common.support.CacheConstants;
 import cn.wuxia.project.common.support.CacheSupport;
-import cn.wuxia.project.common.third.aliyun.IpSeekerUtil;
-import cn.wuxia.project.common.third.aliyun.bean.IpAdress;
 import cn.wuxia.project.location.core.bean.SuggestBoxVo;
 import cn.wuxia.project.location.core.dao.AddressBase2015Dao;
 import cn.wuxia.project.location.core.entity.AddressBase2015;
@@ -16,7 +14,6 @@ import cn.wuxia.project.location.core.enums.AddressBase2015LevelEnum;
 import cn.wuxia.project.location.core.service.AddressBase2015Service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
@@ -202,37 +199,6 @@ public class AddressBase2015ServiceImpl extends CommonServiceImpl<AddressBase201
         }
 
         return (List<AddressBase2015>) v;
-    }
-
-
-    /**
-     * 根据ip查找归属地
-     *
-     * @param ip
-     * @return
-     */
-    private IpAdress ipBelongingTo(String ip) {
-        if (StringUtil.isNotBlank(ip)) {
-            String[] ips = StringUtil.split(ip, ",");
-            if (ArrayUtils.isNotEmpty(ips) & ips.length > 1) {
-                ip = StringUtil.trimBlank(ips[1]);
-            }
-            /**
-             * 缓存的key取前3位
-             */
-            String ipKey = StringUtil.substringBeforeLast(ip, ".");
-            IpAdress ipAdress = IpSeekerUtil.ip2location(ip);
-            if (ipAdress == null || ipAdress.isEmpty() || StringUtil.isBlank(ipAdress.getCity())) {
-                ipAdress = IpSeekerUtil.getAdress(ip);
-            }
-            if (ipAdress == null || ipAdress.isEmpty() || StringUtil.isBlank(ipAdress.getCity())) {
-                ipAdress = IpSeekerUtil.getIpAdressByLocal(ip);
-            }
-
-            return ipAdress;
-        } else {
-            return null;
-        }
     }
 
     @Override
