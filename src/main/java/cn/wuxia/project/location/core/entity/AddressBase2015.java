@@ -1,6 +1,6 @@
 package cn.wuxia.project.location.core.entity;
 
-import cn.wuxia.project.common.model.CommonEntity;
+import cn.wuxia.project.common.model.BaseUuidEntity;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
@@ -20,7 +20,7 @@ import java.util.List;
 @JsonAutoDetect
 @JsonIgnoreProperties({"hibernateLazyInitializer", "parentAddressBase"})
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class AddressBase2015 extends CommonEntity {
+public class AddressBase2015 extends BaseUuidEntity {
     private static final long serialVersionUID = 1L;
 
     private String name;
